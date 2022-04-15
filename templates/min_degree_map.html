@@ -1,0 +1,317 @@
+<!--
+    THIS EXAMPLE WAS DOWNLOADED FROM https://echarts.apache.org/examples/zh/editor.html?c=map-polygon
+-->
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Bootstrap 101 Template</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"
+            integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ"
+            crossorigin="anonymous"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+            integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+            crossorigin="anonymous"></script>
+</head>
+<body style="height: 100%; margin: 0">
+<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"
+        integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ"
+        crossorigin="anonymous"></script>
+<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+        crossorigin="anonymous"></script>
+
+{% include 'navbar.html' %}
+
+<div id="container" style="height: 100%"></div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+{#        <!-- Uncomment this line if you want to dataTool extension#}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/extension/dataTool.min.js"></script>
+{#        -->#}
+{#        <!-- Uncomment this line if you want to use gl extension#}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+{#        -->#}
+{#        <!-- Uncomment this line if you want to echarts-stat extension#}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+{#        -->#}
+{#        <!-- Uncomment this line if you want to use map#}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/map/js/china.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/map/js/world.js"></script>
+{#        -->#}
+{#        <!-- Uncomment these two lines if you want to use bmap extension#}
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=jF79yUKzgHoCRUsSO6TDYtwP5RItiUHr"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/extension/bmap.min.js"></script>
+{#        -->#}
+
+<script type="text/javascript">
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var app = {};
+
+    var option;
+
+
+    var data = {{ data|safe }};
+
+    var geoCoordMap = {{ geo_Coord|safe }};
+
+    var convertData = function (data) {
+        var res = [];
+        for (var i = 0; i < data.length; i++) {
+            var geoCoord = geoCoordMap[data[i].name];
+            if (geoCoord) {
+                res.push({
+                    name: data[i].name,
+                    value: geoCoord.concat(data[i].value)
+                });
+            }
+        }
+        return res;
+    };
+
+    option = {
+        backgroundColor: 'transparent',
+        title: {
+            text: '全国主要城市今日最低温度',
+            subtext: 'data from TencentTianqi',
+            sublink: 'https://tianqi.qq.com/index.htm',
+            left: 'center',
+            textStyle: {
+                color: '#fff'
+            }
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            orient: 'vertical',
+            top: '50px',
+            left: 'right',
+            data: ['今日最低温度(单位：℃)'],
+            textStyle: {
+                color: '#fff'
+            }
+        },
+        visualMap: {
+            min: 0,
+            max: 45,
+            top: 'bottom',
+            left: 'right',
+            splitNumber: 5,
+            color: ['#ee332f', '#f6af88', '#0ee7f4'],
+            textStyle: {
+                color: '#fff'
+            }
+        },
+        bmap: {
+            center: [104.114129, 37.550339],
+            zoom: 5,
+            roam: true,
+            mapStyle: {
+                styleJson: [
+                    {
+                        "featureType": "water",
+                        "elementType": "all",
+                        "stylers": {
+                            "color": "#044161"
+                        }
+                    },
+                    {
+                        "featureType": "land",
+                        "elementType": "all",
+                        "stylers": {
+                            "color": "#004981"
+                        }
+                    },
+                    {
+                        "featureType": "boundary",
+                        "elementType": "geometry",
+                        "stylers": {
+                            "color": "#064f85"
+                        }
+                    },
+                    {
+                        "featureType": "railway",
+                        "elementType": "all",
+                        "stylers": {
+                            "visibility": "off"
+                        }
+                    },
+                    {
+                        "featureType": "highway",
+                        "elementType": "geometry",
+                        "stylers": {
+                            "color": "#004981"
+                        }
+                    },
+                    {
+                        "featureType": "highway",
+                        "elementType": "geometry.fill",
+                        "stylers": {
+                            "color": "#005b96",
+                            "lightness": 1
+                        }
+                    },
+                    {
+                        "featureType": "highway",
+                        "elementType": "labels",
+                        "stylers": {
+                            "visibility": "off"
+                        }
+                    },
+                    {
+                        "featureType": "arterial",
+                        "elementType": "geometry",
+                        "stylers": {
+                            "color": "#004981"
+                        }
+                    },
+                    {
+                        "featureType": "arterial",
+                        "elementType": "geometry.fill",
+                        "stylers": {
+                            "color": "#00508b"
+                        }
+                    },
+                    {
+                        "featureType": "poi",
+                        "elementType": "all",
+                        "stylers": {
+                            "visibility": "off"
+                        }
+                    },
+                    {
+                        "featureType": "green",
+                        "elementType": "all",
+                        "stylers": {
+                            "color": "#056197",
+                            "visibility": "off"
+                        }
+                    },
+                    {
+                        "featureType": "subway",
+                        "elementType": "all",
+                        "stylers": {
+                            "visibility": "off"
+                        }
+                    },
+                    {
+                        "featureType": "manmade",
+                        "elementType": "all",
+                        "stylers": {
+                            "visibility": "off"
+                        }
+                    },
+                    {
+                        "featureType": "local",
+                        "elementType": "all",
+                        "stylers": {
+                            "visibility": "off"
+                        }
+                    },
+                    {
+                        "featureType": "arterial",
+                        "elementType": "labels",
+                        "stylers": {
+                            "visibility": "off"
+                        }
+                    },
+                    {
+                        "featureType": "boundary",
+                        "elementType": "geometry.fill",
+                        "stylers": {
+                            "color": "#029fd4"
+                        }
+                    },
+                    {
+                        "featureType": "building",
+                        "elementType": "all",
+                        "stylers": {
+                            "color": "#1a5787"
+                        }
+                    },
+                    {
+                        "featureType": "label",
+                        "elementType": "all",
+                        "stylers": {
+                            "visibility": "off"
+                        }
+                    }
+                ]
+            }
+        },
+        series: [
+            {
+                name: '今日最低温度(单位：℃)',
+                type: 'scatter',
+                coordinateSystem: 'bmap',
+                data: convertData(data),
+                encode: {
+                    value: 2
+                },
+                symbolSize: function (val) {
+                    return val[2] / 1.5;
+                },
+                label: {
+                    formatter: '{b}',
+                    position: 'right'
+                },
+                itemStyle: {
+                    color: '#ddb926'
+                },
+                emphasis: {
+                    label: {
+                        show: true
+                    }
+                }
+            },
+            {
+                name: 'Top 5',
+                type: 'effectScatter',
+                coordinateSystem: 'bmap',
+                data: convertData(data.sort(function (a, b) {
+                    return b.value - a.value;
+                }).slice(26, 32)),
+                encode: {
+                    value: 2
+                },
+                symbolSize: function (val) {
+                    return val[2] / 0.5;
+                },
+                showEffectOn: 'emphasis',
+                rippleEffect: {
+                    brushType: 'stroke'
+                },
+                hoverAnimation: true,
+                label: {
+                    formatter: '{b}',
+                    position: 'right',
+                    show: true
+                },
+                itemStyle: {
+                    color: '#f4e925',
+                    shadowBlur: 10,
+                    shadowColor: '#333'
+                },
+                zlevel: 1
+            },
+        ]
+    };
+
+    if (option && typeof option === 'object') {
+        myChart.setOption(option);
+    }
+
+</script>
+</body>
+</html>

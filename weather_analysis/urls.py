@@ -1,0 +1,28 @@
+"""weather_analysis URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/3.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path, include
+
+from weather_data.views import region_weather, max_degree_show, min_degree_show, index, get_search_region
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('region/<int:region_id>', region_weather),
+    path('max_degree_map/', max_degree_show),
+    path('min_degree_map/', min_degree_show),
+    path('', index),
+    path('region/', include('weather_data.urls', namespace='weather_data')),
+]

@@ -1,0 +1,32 @@
+header {
+    height: 30px;
+}
+
+nav1 {
+    height: 600px;
+    width: 10%;
+    float: left;
+    margin-top: 20px;
+}
+
+section {
+    width: 70%;
+    float: left;
+    padding-top: 20px;
+    padding-left: 10px;
+}
+
+nav2 {
+    width: 50%;
+    height: 500px;
+    float: left;
+    padding: 0;
+}
+
+footer {
+    background-color: black;
+    color: white;
+    clear: both;
+    text-align: center;
+    padding: 5px;
+}
